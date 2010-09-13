@@ -60,5 +60,10 @@ def admin():
     return render('admin.html', github_url=gh)
 
 
+@app.route('/monitor')
+def monitor():
+    return tasks.how_you_doin.delay().wait(timeout=1)
+
+
 # Hey circular imports!
 import tasks
