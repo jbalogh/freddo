@@ -25,6 +25,15 @@ class Mission(db.Model):
 
     @classmethod
     def go(cls, command):
+        p = sub.Popen(['which', command.split()[0]], stdout=sub.PIPE)
+        loc = p.communicate()[0].strip()
+        p = sub.Popen('file -i %s' % loc, stdout=sub.PIPE, shell=True)
+        file_type = p.communicate()[0]
+        if 'text' in file_type:
+            text = open(loc).read()
+        else:
+            text = file_type
+
         start = datetime.now()
         proc = sub.Popen(command, shell=True, stdout=sub.PIPE, stderr=sub.PIPE)
         out, err = proc.communicate()
@@ -32,7 +41,7 @@ class Mission(db.Model):
         t = finish - start
         duration = round(t.seconds + float(t.microseconds) / 10**6, 3)
 
-        m = Mission(name=command, text='TBD', started=start, finished=finish,
+        m = Mission(name=command, text=text, started=start, finished=finish,
                     duration=duration, stdout=out, stderr=err,
                     exit_code=proc.returncode)
         db.session.add(m)
