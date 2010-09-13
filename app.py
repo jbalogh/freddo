@@ -1,12 +1,43 @@
+from datetime import datetime
 import hashlib
+import subprocess as sub
 
 from flask import Flask, url_for, abort, render_template as render, request
-
-import tasks
+from flaskext.sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)
 app.config.from_object('settings_local')
+db = SQLAlchemy(app)
+
+
+class Mission(db.Model):
+    __tablename__ = 'missions'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))  # How we called the command.
+    text = db.Column(db.Text)         # What the script looked like.
+    started = db.Column(db.DateTime)
+    finished = db.Column(db.DateTime)
+    duration = db.Column(db.Float)
+    stdout = db.Column(db.Text)
+    stderr = db.Column(db.Text)
+    exit_code = db.Column(db.Integer)
+
+    @classmethod
+    def go(cls, command):
+        start = datetime.now()
+        proc = sub.Popen(command, shell=True, stdout=sub.PIPE, stderr=sub.PIPE)
+        out, err = proc.communicate()
+        finish = datetime.now()
+        t = finish - start
+        duration = round(t.seconds + float(t.microseconds) / 10**6, 3)
+
+        m = Mission(name=command, text='TBD', started=start, finished=finish,
+                    duration=duration, stdout=out, stderr=err,
+                    exit_code=proc.returncode)
+        db.session.add(m)
+        db.session.commit()
+        return m
 
 
 def hook_secret():
@@ -27,3 +58,7 @@ def github_hook(secret):
 def admin():
     gh = url_for('github_hook', secret=hook_secret(), _external=True)
     return render('admin.html', github_url=gh)
+
+
+# Hey circular imports!
+import tasks

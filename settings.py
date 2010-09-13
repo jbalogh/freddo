@@ -1,3 +1,7 @@
+DEBUG = True
+
+SQLALCHEMY_DATABASE_URI = 'mysql://<user>:<password>@<host>:<port>/<db>'
+
 SECRET_KEY = ',-Xx,[grC(o&@Lxftz:i&*I`ZCHL+hPE'
 
 ## Celery

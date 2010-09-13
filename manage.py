@@ -16,7 +16,7 @@ os.environ['CELERY_CONFIG_MODULE'] = SETTINGS.split('.')[0]
 
 from flaskext.script import Manager, Server, Shell
 
-from app import app
+from app import app, db
 import celeryd
 
 
@@ -24,6 +24,11 @@ manager = Manager(app)
 manager.add_command('runserver', Server(port=8888))
 manager.add_command('shell', Shell())
 manager.add_command('celeryd', celeryd.celeryd())
+
+
+@manager.command
+def syncdb():
+    db.create_all()
 
 
 if __name__ == '__main__':
