@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Secret Admin Page{% endblock %}
+
+{% block content %}
+<section>
+  <h1>{{ self.title() }}</h1>
+  <dl>
+    <dt>Github Hook</dt>
+    <dd>{{ github_url }}</dd>
+  </dl>
+</section>
+{% endblock %}
