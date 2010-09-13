@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 import os
+import site
 import sys
+
+site.addsitedir('vendor')
 
 # Make sure we have our local settings, then tell Celery about it.
 # For best results, this happens before any 3rd-party imports.

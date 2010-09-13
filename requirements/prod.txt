@@ -2,7 +2,6 @@ Flask==0.6
 Flask-SQLAlchemy==0.9.1
 Flask-Script==0.3
 Jinja2==2.5.2
-MySQL-python==1.2.3
 SQLAlchemy==0.6.4
 Werkzeug==0.6.2
 amqplib==0.6.1
@@ -10,9 +9,8 @@ anyjson==0.2.5
 argparse==1.1
 carrot==0.10.5
 celery==2.0.3
--e git://github.com/jbalogh/check.git@1c73813fcd085020decc6f72caf232f71150db0a#egg=check-0.4pre-py2.6-dev
+-e git://github.com/jbalogh/check.git#egg=check
 importlib==1.0.2
-ipython==0.10
 lockfile==0.8
 pep8==0.5.0
 pyflakes==0.4.0
